@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XSS Case Study</title>
+</head>
+<body>
+  <h1>Hello World</h1>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/register.html">Register</a></li>
+    <li><a href="/users.html">Users</a></li>
+    <li><a href="/search.html">Search</a></li>
+  </ul>
+  <h3>Register</h3>
+  <form class="register-form">
+    Name:<br>
+    <input type="text" name="name"><br>
+    Username:<br>
+    <input type="text" name="username"><br>
+    Age:<br>
+    <input type="text" name="age"><br>
+    Sex:<br>
+    <input type="radio" name="sex" value="male">Male<br>
+    <input type="radio" name="sex" value="male">Female<br>
+    Phone number:<br>
+    <input type="text" name="phone"><br>
+    <button type="submit">Submit</button>
+  </form>
+  <script src="jquery-2.2.3.js" type="text/javascript"></script>
+  <script src="client.js" type="text/javascript"></script>
+</body>
+</html>
+
+
+
+<!--
+
+Password::<br>
+<input type="text" name="password"><br>
+Confirm password::<br>
+<input type="text" name="password"><br>
+-->

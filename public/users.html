@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XSS Case Study</title>
+</head>
+<body>
+  <h1>Hello World</h1>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/register.html">Register</a></li>
+    <li><a href="/users.html">Users</a></li>
+    <li><a href="/search.html">Search</a></li>
+  </ul>
+  <h3>Users</h3>
+  <ul class="user-list"></ul>
+  <script src="jquery-2.2.3.js" type="text/javascript"></script>
+  <script src="client.js" type="text/javascript"></script>
+</body>
+</html>
