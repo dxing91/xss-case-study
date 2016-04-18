@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>XSS Case Study</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
 <body>
-  <h1>Hello World</h1>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/register.html">Register</a></li>
-    <li><a href="/users.html">Users</a></li>
-    <li><a href="/search.html">Search</a></li>
-  </ul>
-  <h3>Users</h3>
-  <ul class="user-list"></ul>
+  <div class="jumbotron col-sm-12 text-center" style="background-color: white;">
+    <h1>XSS Bank</h1>
+    <div class="navbar">
+      <ul class="nav nav-pills" style="display: inline-block; float: none;">
+        <li><a href="/">Home</a></li>
+        <li class="active"><a href="/users.html">Users</a></li>
+        <li><a href="/search.html">Search</a></li>
+      </ul>
+    </div>
+    <div style="display: inline-block; width: 30%;">
+      <h3>Users</h3>
+      <ul class="user-list list-group"></ul>
+    </div>
+  </div>
   <script src="jquery-2.2.3.js" type="text/javascript"></script>
   <script src="client.js" type="text/javascript"></script>
+  <script src="users.js" type="text/javascript"></script>
 </body>
 </html>
