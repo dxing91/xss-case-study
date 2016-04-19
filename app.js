@@ -63,12 +63,13 @@ app.get('/current-name', function(request, response) {
     })[0].name;
     response.json(name);
 });
+
 app.get('/current-username', function(request, response) {
   if (request.cookies.sessionID) {
     var username = sessionDB[request.cookies.sessionID];
     response.json(username);
   } else {
-    response.end();
+    response.sendStatus(404);
   }
 });
 
