@@ -1,12 +1,3 @@
-//Home page
-var cookieID = getCookieID();
-if (cookieID) {
-  $('.login').hide();
-  $('.welcome').find('h3').text('Welcome back, ' + cookieID + '!');
-} else {
-  $('.welcome').hide();
-}
-
 //log in
 $('.login-form').on('submit', function(event) {
   event.preventDefault();

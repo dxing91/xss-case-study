@@ -5,80 +5,116 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 
-var users = [ { 'name': 'yang', 'username': 'wootez', 'age': '25', 'sex': 'male', 'phone': '123', 'password': 'hello', 'confirm-password': 'hello' },
-              { 'name': 'nick', 'username': 'poo', 'age': '25', 'sex': 'male', 'phone': '456', 'password': 'goodbye', 'confirm-password': 'goodbye' } ];
+var users = [ { 'name': 'yang', 'username': 'wootez', 'age': '25', 'sex': 'male', 'phone': '123', 'password': 'hello' },
+              { 'name': 'nick', 'username': 'nickiminaj', 'age': '25', 'sex': 'male', 'phone': '456', 'password': 'goodbye' } ];
 
-var cookieDB = {};
-var cookieIterator = 1;
-var cookieID = 'cookieID' + cookieIterator;
+var sessionDB = {};
+var sessionIterator = 1;
 
-app.use(express.static('public'));
+//middleware
+app.use(express.static('scripts'));
 app.use(cookieParser());
 
-app.get('/profile/:username', function (request, response) {
-  var userDetails = users.filter(function (obj) {
-    return obj.username === request.params.username;
-  });
-  response.json(userDetails);
-});
-
-app.get('/logout', function (request, response) {
-  var cookies = request.cookies;
-  for (var key in cookies) {
-    if (key.indexOf('cookieID') === 0) {
-      response.clearCookie(key).redirect('/');
-    }
+//pages
+app.get('/', function(request, response) {
+  if (request.cookies.sessionID) {
+    response.sendFile(__dirname + '/public/home.html');
+  } else {
+    response.sendFile(__dirname + '/public/index.html');
   }
 });
 
+app.get('/users', function(request, response) {
+  response.sendFile(__dirname + '/public/users.html');
+});
+
+app.get('/search', function(request, response) {
+  response.sendFile(__dirname + '/public/search.html');
+});
+
+app.get('/register', function(request, response) {
+  response.sendFile(__dirname + '/public/register.html');
+})
+
+//home page requests
 app.post('/login', parseUrlencoded, function (request, response) {
   var user = request.body;
   var userFind = users.filter(function (obj) {
     return obj.username === user.username;
   })[0];
   if ( userFind && userFind.password === user.password ) {
-    cookieDB[cookieID] = user.username;
-    cookieIterator++;
-    response.cookie(cookieID, user.username, {encode: data => data}).json(user);
+    var sessionID = 'sessionID' + sessionIterator;
+    sessionDB[sessionID] = user.username;
+    sessionIterator++;
+    response.cookie('sessionID', sessionID, {encode: data => data}).json(user);
   } else {
     response.end();
   }
 });
 
-app.post('/user-update', parseUrlencoded, function (request, response) {
-  var user = request.body;
-  var cookies = request.cookies;
-  var username, cookie;
-  for (var key in cookies) {
-    if (key.indexOf('cookieID') === 0) {
-      cookie = key;
-      username = cookies[key];
-    }
-  }
-  var userFind = users.filter(function(obj) {
-    return obj.username === username;
-  })[0];
-  users[users.indexOf(userFind)] = user;
-  response.clearCookie(cookie).cookie(cookieID, user.username, {encode: data => data}).sendStatus(201);
+app.get('/logout', function (request, response) {
+  response.clearCookie('sessionID').redirect('/');
 });
 
-app.route('/user-list')
-  .get(function (request, response) {
-    response.json(users);
+app.get('/current-username', function(request, response) {
+  var username = sessionDB[request.cookies.sessionID];
+  response.json(username);
+});
+
+//users page request
+app.route('/users-list')
+  .get(function(request, response) {
+    var usernames = users.map(function(user) {
+                      return user.username;
+                    });
+    response.json(usernames);
   })
   .post(parseUrlencoded, function (request, response) {
-    var newUser = request.body;
-    var userFind = users.filter(function (obj) {
-      return obj.username === newUser.username;
+    var user = request.body;
+    var username = user.username;
+    var userExist = users.filter(function (obj) {
+      return obj.username === username;
     })[0];
-    if (!userFind) {
-      users.push(newUser);
-      response.status(201).json(newUser);
+    if (!userExist) {
+      users.push(user);
+      response.json(username);
     } else {
-      response.send(null);
+      response.end();
     }
   });
 
+//profile page requests
+app.get('/profile/:username', function (request, response) {
+  var sessionID = request.cookies.sessionID;
+  var username = sessionDB[sessionID];
+
+  if (username === request.params.username) {
+    response.sendFile(__dirname +  '/public/edit-profile.html');
+  } else {
+    response.sendFile(__dirname + '/public/profile.html');
+  }
+});
+
+app.get('/user-data/:username', function(request, response) {
+  var user = users.filter(function(obj) {
+    return obj.username === request.params.username;
+  })[0];
+  response.json(user);
+});
+
+app.post('/user-update', parseUrlencoded, function(request, response) {
+  var sessionID = request.cookies.sessionID;
+  var username = sessionDB[sessionID];
+  var userFind = users.filter(function(obj) {
+    return obj.username === username;
+  })[0];
+  var user = request.body;
+  users[users.indexOf(userFind)] = user;
+  sessionDB[sessionID] = user.username;
+  response.sendStatus(201);
+});
+
+//port 3000
 app.listen(3000, function () {
   console.log('Listening on port 3000');
 });
