@@ -1,3 +1,7 @@
+$.get('/current-username', function(username) {
+  $('.logged-in').text('Currently logged in as ' + username + '.');
+});
+
 //get users list
 $.get('/users-list', function(usernames) {
   var username, listItem, list = [];

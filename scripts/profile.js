@@ -1,3 +1,7 @@
+$.get('/current-username', function(username) {
+  $('.logged-in').text('Currently logged in as ' + username + '.');
+});
+
 //get others' profile details
 var username = window.location.pathname.replace('/profile/', '');
 

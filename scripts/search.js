@@ -1,3 +1,7 @@
+$.get('/current-username', function(username) {
+  $('.logged-in').text('Currently logged in as ' + username + '.');
+});
+
 //search results
 $('form').on('submit', function(event) {
   event.preventDefault();

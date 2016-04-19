@@ -5,8 +5,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 
-var users = [ { 'name': 'yang', 'username': 'wootez', 'age': '25', 'sex': 'male', 'phone': '123', 'password': 'hello' },
-              { 'name': 'nick', 'username': 'nickiminaj', 'age': '25', 'sex': 'male', 'phone': '456', 'password': 'goodbye' } ];
+var users = [ { 'name': 'Yang', 'username': 'wootez', 'age': '25', 'sex': 'male', 'phone': '123', 'password': 'hello' },
+              { 'name': 'Nick', 'username': 'nickiminaj', 'age': '25', 'sex': 'male', 'phone': '456', 'password': 'goodbye' } ];
 
 var sessionDB = {};
 var sessionIterator = 1;
@@ -36,8 +36,8 @@ app.get('/register', function(request, response) {
   response.sendFile(__dirname + '/public/register.html');
 })
 
-//home page requests
-app.post('/login', parseUrlencoded, function (request, response) {
+//account requests
+app.post('/login', parseUrlencoded, function(request, response) {
   var user = request.body;
   var userFind = users.filter(function (obj) {
     return obj.username === user.username;
@@ -52,13 +52,24 @@ app.post('/login', parseUrlencoded, function (request, response) {
   }
 });
 
-app.get('/logout', function (request, response) {
+app.get('/logout', function(request, response) {
   response.clearCookie('sessionID').redirect('/');
 });
 
+app.get('/current-name', function(request, response) {
+    var username = sessionDB[request.cookies.sessionID];
+    var name = users.filter(function (obj) {
+      return obj.username === username;
+    })[0].name;
+    response.json(name);
+});
 app.get('/current-username', function(request, response) {
-  var username = sessionDB[request.cookies.sessionID];
-  response.json(username);
+  if (request.cookies.sessionID) {
+    var username = sessionDB[request.cookies.sessionID];
+    response.json(username);
+  } else {
+    response.end();
+  }
 });
 
 //users page request
