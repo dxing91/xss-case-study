@@ -1,0 +1,5 @@
+{
+  "name": "XSS Case Study",
+  "description": "A simple application which exposes potential XSS security issues.",
+  "repository": "https://github.com/dxing91/xss-case-study.git"
+}
