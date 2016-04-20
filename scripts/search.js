@@ -3,7 +3,7 @@ $.get('/current-username', function(username) {
 });
 
 //search results
-var search = window.location.search.replace('?search=', '');
+var search = decodeURIComponent(window.location.search.replace('?search=', ''));
 if (search) {
   $.get('/users-list', function(users) {
     var userFind = users.indexOf(search);
