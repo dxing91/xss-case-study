@@ -3,11 +3,8 @@ $.get('/current-username', function(username) {
 });
 
 //search results
-$('form').on('submit', function(event) {
-  event.preventDefault();
-  $('.results').remove();
-  var search = $('input[name=search]').val();
-
+var search = window.location.search.replace('?search=', '');
+if (search) {
   $.get('/users-list', function(users) {
     var userFind = users.indexOf(search);
     if (userFind > -1) {
@@ -17,4 +14,4 @@ $('form').on('submit', function(event) {
     }
     $('.search-results').before('<p class="results">Results</p>').append(results);
   });
-});
+};
